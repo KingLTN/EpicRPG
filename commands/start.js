@@ -10,14 +10,14 @@ module.exports = {
             client.global.paused = false;
             client.rpc("update");
             await message.delete();
-            await message.channel.send({ content: "1" });
+            await message.channel.send({ content: "fun" });
             setTimeout(() => {
                 require("../utils/farm.js")(client, message);
             }, 1000);
         } else {
             await message.delete();
             await message.channel.send({
-                content: "1",
+                content: "working 1",
             });
         }
     },

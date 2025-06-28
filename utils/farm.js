@@ -1,7 +1,23 @@
 const { logger } = require("./logger");
 
+// Thêm biến để quản lý intervals
+let huntInterval = null;
+let adventureInterval = null;
+let trainingInterval = null;
+let farmInterval = null;
+let workingInterval = null;
+
+// Biến để theo dõi trạng thái intervals
+let intervalsActive = false;
+
 module.exports = async (client, message) => {
     if (client.global.paused || client.global.captchadetected) return;
+    
+    // Dọn dẹp các interval cũ trước khi tạo mới
+    clearAllIntervals();
+    
+    // Đánh dấu intervals đang hoạt động
+    intervalsActive = true;
     
     // Kiểm tra thời gian nghỉ
     if (client.checkBreakTime()) {
@@ -28,6 +44,35 @@ module.exports = async (client, message) => {
         checkcooldowns(client, channel);
     }
 };
+
+// Hàm dọn dẹp tất cả intervals
+function clearAllIntervals() {
+    if (huntInterval) {
+        clearInterval(huntInterval);
+        huntInterval = null;
+    }
+    if (adventureInterval) {
+        clearInterval(adventureInterval);
+        adventureInterval = null;
+    }
+    if (trainingInterval) {
+        clearInterval(trainingInterval);
+        trainingInterval = null;
+    }
+    if (farmInterval) {
+        clearInterval(farmInterval);
+        farmInterval = null;
+    }
+    if (workingInterval) {
+        clearInterval(workingInterval);
+        workingInterval = null;
+    }
+    intervalsActive = false;
+    logger.info("Farm", "Intervals", "Đã dọn dẹp tất cả intervals cũ");
+}
+
+// Export hàm clearAllIntervals để sử dụng từ các file khác
+module.exports.clearAllIntervals = clearAllIntervals;
 
 /**
  * INVENTORY & COOLDOWN
@@ -865,6 +910,12 @@ async function checkcooldowns(client, channel) {
  */
 
 async function hunt(client, channel, extratime = 0) {
+    // Kiểm tra nếu đã có interval đang chạy thì không tạo mới
+    if (huntInterval) {
+        logger.info("Farm", "Hunt", "Hunt interval đã đang chạy, bỏ qua tạo mới");
+        return;
+    }
+
     setTimeout(async () => {
         if (
             client.global.paused ||
@@ -933,7 +984,12 @@ async function hunt(client, channel, extratime = 0) {
         }
     }, 1000 + extratime);
 
-    setInterval(async () => {
+    // Kiểm tra nếu đã có interval cũ thì dọn dẹp
+    if (huntInterval) {
+        clearInterval(huntInterval);
+    }
+
+    huntInterval = setInterval(async () => {
         if (
             client.global.paused ||
             client.global.captchadetected ||
@@ -1053,7 +1109,12 @@ async function adventure(client, channel, extratime = 0) {
         });
     }, 1000 + extratime);
 
-    setInterval(async () => {
+    // Kiểm tra nếu đã có interval cũ thì dọn dẹp
+    if (adventureInterval) {
+        clearInterval(adventureInterval);
+    }
+
+    adventureInterval = setInterval(async () => {
         if (
             client.global.paused ||
             client.global.captchadetected ||
@@ -1113,7 +1174,12 @@ async function training(client, channel, extratime = 0) {
         });
     }, 1000 + extratime);
 
-    setInterval(async () => {
+    // Kiểm tra nếu đã có interval cũ thì dọn dẹp
+    if (trainingInterval) {
+        clearInterval(trainingInterval);
+    }
+
+    trainingInterval = setInterval(async () => {
         if (
             client.global.paused ||
             client.global.captchadetected ||
@@ -1177,7 +1243,12 @@ async function farm(client, channel, extratime = 0) {
         });
     }, 1000 + extratime);
 
-    setInterval(async () => {
+    // Kiểm tra nếu đã có interval cũ thì dọn dẹp
+    if (farmInterval) {
+        clearInterval(farmInterval);
+    }
+
+    farmInterval = setInterval(async () => {
         if (
             client.global.paused ||
             client.global.captchadetected ||
@@ -1232,7 +1303,12 @@ async function working(client, channel, type, extratime = 0) {
         });
     }, 1000 + extratime);
 
-    setInterval(async () => {
+    // Kiểm tra nếu đã có interval cũ thì dọn dẹp
+    if (workingInterval) {
+        clearInterval(workingInterval);
+    }
+
+    workingInterval = setInterval(async () => {
         if (
             client.global.paused ||
             client.global.captchadetected ||

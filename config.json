@@ -15,7 +15,7 @@
             "hunt": true,
             "adventure": true,
             "training": true
-        },
+        },      
         "progress": {
             "farm": {
                 "enable": true,
@@ -65,7 +65,7 @@
                     "common lootbox": true,
                     "uncommon lootbox": true,
                     "rare lootbox": false,
-                    "EPIC lootbox": true,
+                    "EPIC lootbox": false,
                     "EDGY lootbox": false,
                     "OMEGA lootbox": false
                 }
