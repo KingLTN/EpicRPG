@@ -10,11 +10,11 @@ module.exports = {
             client.global.paused = false;
             client.rpc("update");
             await message.delete();
-            await message.channel.send({ content: "Resuming :)" });
+            await message.channel.send({ content: "3 :)" });
         } else {
             await message.delete();
             await message.channel.send({
-                content: "Bot is already working!!!",
+                content: "3!!!",
             });
         }
     },

@@ -7,13 +7,13 @@ module.exports = {
         if (client.global.paused) {
             await message.delete();
             await message.channel.send({
-                content: "Bot is already paused!!!",
+                content: "4!!!",
             });
         } else {
             client.global.paused = true;
             client.rpc("update");
             await message.delete();
-            await message.channel.send({ content: "Paused :)" });
+            await message.channel.send({ content: "2" });
             // process.exit(0);
         }
     },

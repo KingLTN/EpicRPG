@@ -162,6 +162,11 @@ let epicrpgfarm = {
     totalspecialtrade: 0,
     totalarena: 0,
     totalworking: 0,
+    break_time: {
+        work_start_time: null,
+        is_on_break: false,
+        break_start_time: null
+    },
     inventory: {
         lifepotion: 0,
         arenacookie: 0,
@@ -284,7 +289,24 @@ const asciiArts = [
     ⠀⠀⠀⠀⠀⠀⠀⢠⡟⠉⠛⢷⣄⠀⠀⠈⠀⠀⠀⠀⠀⠀⣰⠏⠀⠀⠀⠀⠀⠀
     ⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠉⠃⠀⠀⠀⠀⠀⠀⠀⣴⠏⠀⠀⠀⠀⠀⠀⠀
     ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⢀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣤⣤⣤⡤⠶⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣤⣤⣤⡤⠶⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`,
+    `⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠶⢦⣤⠶⠶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣇⠀⠀⠁⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢧⣄⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠉⠛⠃⣠⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠉⠙⢳⣄⢀⡾⠁⠈⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠀⠀⠙⢿⡇⠀⢰⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣦⡀⠀⠀⠹⣦⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⣄⠀⠀⠈⠻⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠋⠛⢧⡀⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡴⠾⣧⡀⠀⠀⠹⣦⠀⠀⠈⢿⡄⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⠀⠀⠈⠻⣄⠀⠀⠀⠀⠀⠀⠈⣷⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⢠⡟⠉⠛⢷⣄⠀⠀⠈⠀⠀⠀⠀⠀⠀⣰⠏⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠉⠃⠀⠀⠀⠀⠀⠀⠀⣴⠏⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⢀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣤⣤⣤⡤⠶⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`,
     `⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡋⠉⠙⠒⢤⡀⠀⠀⠀⠀⠀⢠⠖⠉⠉⠙⠢⡄⠀
     ⠀⠀⠀⠀⠀⠀⢀⣼⣟⡒⠒⠀⠀⠀⠀⠀⠙⣆⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠹⡄
@@ -316,3 +338,80 @@ checkUpdate();
 
 client.on("ready", () => {
 });
+
+// Hàm quản lý thời gian nghỉ
+function startWorkTime() {
+    if (!client.global.break_time.work_start_time) {
+        client.global.break_time.work_start_time = Date.now();
+        client.global.break_time.is_on_break = false;
+        logger.info("Break Time", "Work", "Bắt đầu thời gian làm việc");
+    }
+}
+
+function checkBreakTime() {
+    if (!client.config.settings.break_time.enable) return false;
+    
+    const now = Date.now();
+    const workMinutes = client.config.settings.break_time.work_minutes;
+    const breakMinutes = client.config.settings.break_time.break_minutes;
+    
+    // Nếu đang trong thời gian nghỉ
+    if (client.global.break_time.is_on_break) {
+        const breakStartTime = client.global.break_time.break_start_time;
+        const breakElapsed = (now - breakStartTime) / (1000 * 60); // phút
+        
+        if (breakElapsed >= breakMinutes) {
+            // Kết thúc thời gian nghỉ
+            client.global.break_time.is_on_break = false;
+            client.global.break_time.work_start_time = now;
+            logger.info("Break Time", "Work", `Kết thúc thời gian nghỉ (${breakMinutes} phút). Bắt đầu làm việc lại.`);
+            return false;
+        } else {
+            // Vẫn đang trong thời gian nghỉ
+            const remainingBreak = Math.ceil(breakMinutes - breakElapsed);
+            logger.info("Break Time", "Break", `Đang nghỉ... Còn ${remainingBreak} phút`);
+            return true;
+        }
+    }
+    
+    // Kiểm tra xem có cần nghỉ không
+    if (client.global.break_time.work_start_time) {
+        const workElapsed = (now - client.global.break_time.work_start_time) / (1000 * 60); // phút
+        
+        if (workElapsed >= workMinutes) {
+            // Bắt đầu thời gian nghỉ
+            client.global.break_time.is_on_break = true;
+            client.global.break_time.break_start_time = now;
+            logger.info("Break Time", "Break", `Bắt đầu thời gian nghỉ (${breakMinutes} phút) sau ${workMinutes} phút làm việc`);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// Thêm hàm vào client
+client.startWorkTime = startWorkTime;
+client.checkBreakTime = checkBreakTime;
+
+// Interval kiểm tra thời gian nghỉ định kỳ
+setInterval(() => {
+    if (client.config.settings.break_time.enable) {
+        const wasOnBreak = client.global.break_time.is_on_break;
+        const isOnBreak = client.checkBreakTime();
+        
+        // Nếu vừa kết thúc thời gian nghỉ, bắt đầu farm lại
+        if (wasOnBreak && !isOnBreak) {
+            console.log(
+                chalk.blue(chalk.bold("Break Time")),
+                chalk.white(`>>`),
+                chalk.green("Kết thúc thời gian nghỉ, bắt đầu farm lại!")
+            );
+            
+            // Bắt đầu farm lại
+            const farm = require("./utils/farm.js");
+            const channel = client.channels.cache.get(client.config.channelid);
+            if (channel) farm(client, { channel });
+        }
+    }
+}, 60000); // Kiểm tra mỗi phút

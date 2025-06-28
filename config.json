@@ -1,11 +1,11 @@
 {
-    "prefix": "",
+    "prefix": "", 
     "token": "",
     "channelid": "",
     "userid": "",
     "commands": {
         "rewards": {
-            "daily": true,
+            "daily": true, 
             "weekly": true,
             "vote": {
                 "enable": false
@@ -27,12 +27,12 @@
                 }
             },
             "working": {
-                "chop": false,
+                "chop": true,
                 "fish": false,
                 "pickup": false,
                 "mine": false,
                 "axe": false,
-                "pickaxe": true,
+                "pickaxe": false,
                 "drill": false,
                 "net": false,
                 "ladder": false
@@ -40,26 +40,31 @@
         }
     },
     "settings": {
-        "discordrpc": true,
-        "autophrases": true,
+        "discordrpc": false,
+        "autophrases": false,
+        "break_time": {
+            "enable": true,
+            "work_minutes": 40,
+            "break_minutes": 10
+        },
         "event": {
             "autojoin": true,
             "autospecialtrade": true,
             "autoarena": true
         },
-        "captcha_alert_channelid": "https://discord.com/api/webhooks/1379633373735288942/zysRbg09bdw736bWSf77gzqLhNzvWbafSyjyMbP1w2KF26BqT-8sgK2B3H3XuUPyQf_U",
+        "captcha_alert_channelid": "",
         "inventory": {
             "check": true,
             "lifepotion": {
                 "autouse": true,
-                "hplimit": 10
+                "hplimit": 100
             },
             "lootbox": {
                 "autouse": true,
                 "types": {
                     "common lootbox": true,
                     "uncommon lootbox": true,
-                    "rare lootbox": true,
+                    "rare lootbox": false,
                     "EPIC lootbox": true,
                     "EDGY lootbox": false,
                     "OMEGA lootbox": false
@@ -90,7 +95,7 @@
             }
         },
         "lootbox": true,
-        "lootbox_webhook_url": "https://discord.com/api/webhooks/1386524045633126410/Ihca_TGVcvXtIaA25ITeUYICxlWZoPGQSoMKQRhVLKjdx8BRnPezlnxkilsxo5pvL5Xi",
+        "lootbox_webhook_url": "",
         "lootbox_buy": {
             "types": {
                 "rare lootbox": false,

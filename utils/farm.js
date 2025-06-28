@@ -2,6 +2,16 @@ const { logger } = require("./logger");
 
 module.exports = async (client, message) => {
     if (client.global.paused || client.global.captchadetected) return;
+    
+    // Kiểm tra thời gian nghỉ
+    if (client.checkBreakTime()) {
+        logger.info("Farm", "Break Time", "Bot đang trong thời gian nghỉ, tạm dừng hoạt động");
+        return;
+    }
+    
+    // Bắt đầu thời gian làm việc nếu chưa bắt đầu
+    client.startWorkTime();
+    
     logger.info("Farm", "Paused", client.global.paused);
     let channel = client.channels.cache.get(client.config.channelid);
     if (
@@ -29,6 +39,10 @@ async function inventory(client, channel, type = null) {
     client.global.paused = true;
     logger.info("Farm", "Inventory", `Paused: ${client.global.paused}`);
     logger.info("Farm", "Inventory", `Getting Inventory ...`);
+
+    // Khai báo biến để tránh lỗi ReferenceError
+    let usecooldown = 0;
+    let inventoryuseloopcounter = 0;
 
     await channel.send({ content: "rpg inventory" }).then(async () => {
         let message = null;
@@ -142,8 +156,6 @@ async function inventory(client, channel, type = null) {
 
             if (useconsumablesValue) {
                 const useconsumableslines = useconsumablesValue.split("\n");
-                usecooldown = 0;
-                inventoryuseloopcounter = 0;
                 for (const line of useconsumableslines) {
                     const trimmedLine = line.trim();
 
@@ -223,8 +235,6 @@ async function inventory(client, channel, type = null) {
 
             if (consumablesValue) {
                 const consumableslines = consumablesValue.split("\n");
-                usecooldown = 0;
-                inventoryuseloopcounter = 0;
                 for (const line of consumableslines) {
                     const trimmedLine = line.trim();
 
@@ -774,9 +784,9 @@ async function checkcooldowns(client, channel) {
             progressworkingmultivalue
         ) {
             if (chopcooldown > 0) {
-                working(client, channel, "chop", chopcooldown + 3500);
+                working(client, channel, "chop ", chopcooldown + 3500);
             } else {
-                working(client, channel, "chop", 7500);
+                working(client, channel, "chop ", 7500);
             }
         }
 
@@ -864,6 +874,13 @@ async function hunt(client, channel, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Hunt", "Đang trong thời gian nghỉ, bỏ qua hunt");
+            return;
+        }
+        
         if (
             client.config.settings.inventory.check &&
             client.config.settings.inventory.lifepotion.autouse &&
@@ -925,6 +942,13 @@ async function hunt(client, channel, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Hunt", "Đang trong thời gian nghỉ, bỏ qua hunt");
+            return;
+        }
+        
         if (
             client.config.settings.inventory.check &&
             client.config.settings.inventory.lifepotion.autouse &&
@@ -1008,6 +1032,13 @@ async function adventure(client, channel, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Adventure", "Đang trong thời gian nghỉ, bỏ qua adventure");
+            return;
+        }
+        
         use(client, channel, "life potion", "", "adventure");
         await client.delay(2500);
         await channel.send({ content: "rpg adventure" }).then(async () => {
@@ -1031,6 +1062,13 @@ async function adventure(client, channel, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Adventure", "Đang trong thời gian nghỉ, bỏ qua adventure");
+            return;
+        }
+        
         use(client, channel, "life potion", "", "adventure");
         await client.delay(2500);
 
@@ -1058,6 +1096,12 @@ async function training(client, channel, extratime = 0) {
             client.global.farm
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Training", "Đang trong thời gian nghỉ, bỏ qua training");
+            return;
+        }
 
         await channel.send({ content: "rpg training" }).then(async () => {
             client.global.totaltraining++;
@@ -1079,6 +1123,12 @@ async function training(client, channel, extratime = 0) {
             client.global.farm
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Training", "Đang trong thời gian nghỉ, bỏ qua training");
+            return;
+        }
 
         await channel.send({ content: "rpg training" }).then(async () => {
             client.global.totaltraining++;
@@ -1104,6 +1154,13 @@ async function farm(client, channel, extratime = 0) {
             client.global.training
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Progress-Farm", "Đang trong thời gian nghỉ, bỏ qua farm");
+            return;
+        }
+        
         if (client.global.inventory.farm.breadseed >= 1) {
             farmseedtype = "bread seed";
         } else if (client.global.inventory.farm.carrotseed >= 1) {
@@ -1130,6 +1187,13 @@ async function farm(client, channel, extratime = 0) {
             client.global.training
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Progress-Farm", "Đang trong thời gian nghỉ, bỏ qua farm");
+            return;
+        }
+        
         if (client.global.inventory.farm.breadseed >= 1) {
             farmseedtype = "bread seed";
         } else if (client.global.inventory.farm.carrotseed >= 1) {
@@ -1155,6 +1219,13 @@ async function working(client, channel, type, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Working", "Đang trong thời gian nghỉ, bỏ qua working");
+            return;
+        }
+        
         await channel.send({ content: `rpg ${type}` }).then(() => {
             client.global.totalworking++;
             logger.info("Farm", "Working", `Type: ${type}`);
@@ -1170,6 +1241,13 @@ async function working(client, channel, type, extratime = 0) {
             client.global.weekly
         )
             return;
+            
+        // Kiểm tra thời gian nghỉ
+        if (client.checkBreakTime()) {
+            logger.info("Farm", "Working", "Đang trong thời gian nghỉ, bỏ qua working");
+            return;
+        }
+        
         await channel.send({ content: `rpg ${type}` }).then(() => {
             logger.info("Farm", "Working", `Type: ${type}`);
         });
